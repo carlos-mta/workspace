@@ -1,60 +1,65 @@
+# Use the latest Ubuntu as the base image
 FROM ubuntu:latest AS base
 
+# Set environment variable to make install non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
 
-# Neovim + distro utilities
+# Update and install dependencies
 RUN apt-get update && apt-get install -y \
     software-properties-common \
-    xclip \
     curl \
+    xclip \
     tmux \
     git \
     bash \
     build-essential \
+    python3 \
+    python3.10 \
+    ca-certificates \
+    openssl \
     && add-apt-repository -y ppa:neovim-ppa/unstable \
     && apt-get update \
     && apt-get install -y neovim
 
-# GO installation
+# Install Go
 ENV GO_VERSION 1.21.5
-RUN apt-get update && apt-get install -y \
-    curl \
-    && curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz \
+RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz \
     && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz \
     && rm go$GO_VERSION.linux-amd64.tar.gz
 
+# Set PATH for Go
 ENV PATH "/usr/local/go/bin:$PATH"
 
-# Node.js installation
+# Install Node.js using NVM
 ENV NVM_DIR /usr/local/nvm
-
-ENV PATH "$NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH"
-
-RUN mkdir -p $NVM_DIR
-
 ENV NODE_VERSION v20.10.0
-
-RUN apt-get update && apt-get install -y \
-    curl \
-    ca-certificates \
-    openssl \
-    python3 \
+RUN mkdir -p $NVM_DIR \
     && curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh | bash \
     && . $NVM_DIR/nvm.sh \
     && nvm install $NODE_VERSION \
     && nvm alias default $NODE_VERSION \
     && nvm use default
 
-# Common GO development utils
-RUN go install github.com/cosmtrek/air@v1.49.0
-RUN go install golang.org/x/tools/cmd/goimports@latest
-RUN go install golang.org/x/tools/gopls@latest
+# Set PATH for Node.js
+ENV PATH "$NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH"
 
-# Git config
-RUN git config --global --add safe.directory '*'
-RUN git config --global user.name "Carlos Molero"
-RUN git config --global user.email "carlos@novascript.io"
+# Install Node.js packages
+RUN npm i -g vscode-langservers-extracted \
+    && npm i -g prettier \
+    && npm i -g @johnnymorganz/stylua-bin
 
+# Install Go development utilities
+RUN go install github.com/cosmtrek/air@v1.49.0 \
+    && go install golang.org/x/tools/cmd/goimports@latest \
+    && go install golang.org/x/tools/gopls@latest
+
+# Configure Git
+RUN git config --global --add safe.directory '*' \
+    && git config --global user.name "Carlos Molero" \
+    && git config --global user.email "carlos@novascript.io"
+
+# Set the working directory
 WORKDIR /workspace
 
+# Keep the container running
 CMD ["sleep", "infinity"]
