@@ -9,17 +9,19 @@ RUN apt-get update && apt-get install -y \
     software-properties-common \
     curl \
     xclip \
-    tmux \
+    ripgrep \
     git \
     bash \
     build-essential \
     python3 \
     python3.10 \
+    python3-pip \
     ca-certificates \
     openssl \
     && add-apt-repository -y ppa:neovim-ppa/unstable \
     && apt-get update \
-    && apt-get install -y neovim
+    && apt-get install -y neovim \ 
+    && pip install djhtml
 
 # Install Go
 ENV GO_VERSION 1.21.5
