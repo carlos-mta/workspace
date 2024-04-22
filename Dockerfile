@@ -46,7 +46,7 @@ RUN mkdir -p $NVM_DIR \
 ENV PATH "$NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH"
 
 # Install Node.js packages
-RUN npm i -g vscode-langservers-extracted \
+RUN npm i -g vscode-langservers-extracted yaml-language-server \
     && npm i -g prettier \
     && npm i -g @johnnymorganz/stylua-bin
 
