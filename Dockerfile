@@ -58,7 +58,8 @@ RUN go install github.com/cosmtrek/air@v1.49.0 \
 # Configure Git
 RUN git config --global --add safe.directory '*' \
     && git config --global user.name "Carlos Molero" \
-    && git config --global user.email "carlos@novascript.io"
+    && git config --global user.email "carlos@novascript.io" \
+    && git config --global core.editor "nvim"
 
 # Set the working directory
 WORKDIR /workspace
