@@ -4,6 +4,9 @@ FROM ubuntu:latest AS base
 # Set environment variable to make install non-interactive
 ENV DEBIAN_FRONTEND=noninteractive
 
+# Break pip system packages
+ENV PIP_BREAK_SYSTEM_PACKAGES=1
+
 # Update and install dependencies
 RUN apt-get update && apt-get install -y \
     software-properties-common \
@@ -18,7 +21,7 @@ RUN apt-get update && apt-get install -y \
     python3-pip \
     ca-certificates \
     openssl \
-    && add-apt-repository -y ppa:neovim-ppa/unstable \
+    && add-apt-repository -y ppa:neovim-ppa/stable \
     && apt-get update \
     && apt-get install -y neovim \ 
     && pip install djhtml
@@ -60,6 +63,9 @@ RUN git config --global --add safe.directory '*' \
     && git config --global user.name "Carlos Molero" \
     && git config --global user.email "carlos@novascript.io" \
     && git config --global core.editor "nvim"
+
+# Setup BASH-IT
+RUN git clone --depth=1 https://github.com/Bash-it/bash-it.git ~/.bash_it && ~/.bash_it/install.sh
 
 # Set the working directory
 WORKDIR /workspace
