@@ -23,17 +23,7 @@ RUN apt-get update && apt-get install -y \
     openssl \
     && add-apt-repository -y ppa:neovim-ppa/stable \
     && apt-get update \
-    && apt-get install -y neovim \ 
-    && pip install djhtml
-
-# Install Go
-ENV GO_VERSION 1.21.5
-RUN curl -LO https://golang.org/dl/go$GO_VERSION.linux-amd64.tar.gz \
-    && tar -C /usr/local -xzf go$GO_VERSION.linux-amd64.tar.gz \
-    && rm go$GO_VERSION.linux-amd64.tar.gz
-
-# Set PATH for Go
-ENV PATH "/usr/local/go/bin:$PATH"
+    && apt-get install -y neovim
 
 # Install Node.js using NVM
 ENV NVM_DIR /usr/local/nvm
@@ -49,14 +39,10 @@ RUN mkdir -p $NVM_DIR \
 ENV PATH "$NVM_DIR/versions/node/$NODE_VERSION/bin:$PATH"
 
 # Install Node.js packages
-RUN npm i -g vscode-langservers-extracted yaml-language-server \
-    && npm i -g prettier \
-    && npm i -g @johnnymorganz/stylua-bin
-
-# Install Go development utilities
-RUN go install github.com/cosmtrek/air@v1.49.0 \
-    && go install golang.org/x/tools/cmd/goimports@latest \
-    && go install golang.org/x/tools/gopls@latest
+RUN npm i -g vscode-langservers-extracted \
+    yaml-language-server prettier \
+    @johnnymorganz/stylua-bin \
+    pnpm
 
 # Configure Git
 RUN git config --global --add safe.directory '*' \
