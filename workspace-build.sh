@@ -1,3 +1,4 @@
 venv=$1
 
-docker build -t workspace-$venv -f ~/Desktop/PROJECTS/workspace/Dockerfile.$venv .
+docker build -t workspace-$venv -f ~/Escritorio/PROJECTS/DEV/workspace/Dockerfile.$venv \
+~/Escritorio/PROJECTS/DEV/workspace
