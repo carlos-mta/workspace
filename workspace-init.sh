@@ -1,10 +1,7 @@
 venv=$1
 
 docker run -d --name workspace-$venv \
-  -p 3000:3000 \
-  -p 8080:8080 \
-  -p 5555:5555	\
-  -p 24678:24678 \
+  --network host \
   --restart unless-stopped \
   --add-host=host.docker.internal:host-gateway \
   -v /tmp/.X11-unix:/tmp/.X11-unix -e DISPLAY=$DISPLAY \
